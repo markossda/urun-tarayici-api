@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: urun-tarayici-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn api_bridge:app
+    healthCheckPath: /health
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: WALMART_CLIENT_ID
+        sync: false
+      - key: WALMART_CLIENT_SECRET
+        sync: false
+      - key: API_KEY
+        generateValue: true
+    autoDeploy: true
+    plan: free 

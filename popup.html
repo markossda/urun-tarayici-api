@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Walmart Ürün Tarayıcı</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <img src="icons/icon48.png" alt="Logo" class="logo">
+      <h1>Ürün Tarayıcı</h1>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-button active" data-tab="scanner">Walmart</button>
+      <button class="tab-button" data-tab="amazon">Amazon</button>
+      <button class="tab-button" data-tab="upc">UPC Arama</button>
+      <button class="tab-button" data-tab="variations">Varyasyonlar</button>
+      <button class="tab-button" data-tab="batch">Toplu İşlem</button>
+      <button class="tab-button" data-tab="history">Geçmiş</button>
+      <button class="tab-button" data-tab="settings">Ayarlar</button>
+    </div>
+
+    <div class="tab-content">
+      <!-- Walmart Tarayıcı Sekmesi -->
+      <div id="scanner" class="tab-pane active">
+        <div class="status-card">
+          <div class="status-icon" id="status-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 3H5C3.89543 3 3 3.89543 3 5V9M9 21H5C3.89543 21 3 20.1046 3 19V15M21 9V5C21 3.89543 20.1046 3 19 3H15M21 15V19C21 20.1046 20.1046 21 19 21H15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="status-info">
+            <h3 id="status-title">Hazır</h3>
+            <p id="status-message">Taramak için bir Walmart ürün sayfasına gidin</p>
+          </div>
+        </div>
+
+        <div class="action-area">
+          <button id="scan-button" class="primary-button" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 10V14M12 10V14M17 10V14M3 7H21M5 7L6 19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19L19 7M8 7V5C8 3.89543 8.89543 3 10 3H14C15.1046 3 16 3.89543 16 5V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Ürünü Tara
+          </button>
+
+          <button id="compare-button" class="secondary-button" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 18L18 20L22 16M12 15C8.13401 15 5 11.866 5 8C5 4.13401 8.13401 1 12 1C15.866 1 19 4.13401 19 8C19 9.93 18.2174 11.6825 16.9341 12.9341M7 21C3.68629 21 1 18.3137 1 15C1 11.6863 3.68629 9 7 9C8.6745 9 10.1898 9.67534 11.2968 10.7822" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Karşılaştır
+          </button>
+        </div>
+
+        <div class="result-area" id="result-container" style="display: none;">
+          <!-- Tarama sonuçları buraya dinamik olarak eklenecek -->
+        </div>
+      </div>
+
+      <!-- Amazon Tarayıcı Sekmesi -->
+      <div id="amazon" class="tab-pane">
+        <div class="info-card">
+          <h3>Amazon Ürün Analizi</h3>
+          <p>Amazon ürün URL'sini girin veya açık olan Amazon sayfasını tarayın.</p>
+        </div>
+
+        <div class="input-group">
+          <input type="text" id="amazon-url" class="text-input" placeholder="Amazon ürün URL'si yapıştırın">
+          <button id="amazon-analyze-button" class="primary-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Analiz Et
+          </button>
+        </div>
+
+        <div class="action-area">
+          <button id="amazon-scan-button" class="primary-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 10V14M12 10V14M17 10V14M3 7H21M5 7L6 19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19L19 7M8 7V5C8 3.89543 8.89543 3 10 3H14C15.1046 3 16 3.89543 16 5V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Açık Sayfayı Tara
+          </button>
+        </div>
+
+        <div class="result-area" id="amazon-result-container" style="display: none;">
+          <!-- Amazon tarama sonuçları buraya dinamik olarak eklenecek -->
+        </div>
+      </div>
+
+      <!-- UPC Arama Sekmesi -->
+      <div id="upc" class="tab-pane">
+        <div class="info-card">
+          <h3>UPC ile Ürün Arama</h3>
+          <p>Ürün UPC kodunu girerek Walmart'ta arama yapın.</p>
+        </div>
+
+        <div class="input-group">
+          <input type="text" id="upc-input" class="text-input" placeholder="UPC kodunu girin (örn: 123456789012)">
+          <button id="upc-search-button" class="primary-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Ara
+          </button>
+        </div>
+
+        <div class="result-area" id="upc-result-container" style="display: none;">
+          <!-- UPC arama sonuçları buraya dinamik olarak eklenecek -->
+        </div>
+      </div>
+
+      <!-- Varyasyonlar Sekmesi -->
+      <div id="variations" class="tab-pane">
+        <div class="info-card">
+          <h3>Ürün Varyasyonları</h3>
+          <p>Walmart ürün URL'si girerek tüm varyasyonları görüntüleyin.</p>
+        </div>
+
+        <div class="input-group">
+          <input type="text" id="variations-url" class="text-input" placeholder="Walmart ürün URL'si yapıştırın">
+          <button id="variations-search-button" class="primary-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 21L15 15M17 10C17 13.866 13.866 17 10 17C6.13401 17 3 13.866 3 10C3 6.13401 6.13401 3 10 3C13.866 3 17 6.13401 17 10Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Varyasyonları Bul
+          </button>
+        </div>
+
+        <div class="action-area">
+          <button id="variations-scan-button" class="primary-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7 10V14M12 10V14M17 10V14M3 7H21M5 7L6 19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19L19 7M8 7V5C8 3.89543 8.89543 3 10 3H14C15.1046 3 16 3.89543 16 5V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Açık Sayfanın Varyasyonlarını Bul
+          </button>
+        </div>
+
+        <div class="result-area" id="variations-result-container" style="display: none;">
+          <!-- Varyasyon sonuçları buraya dinamik olarak eklenecek -->
+        </div>
+      </div>
+
+      <!-- Toplu İşlem Sekmesi -->
+      <div id="batch" class="tab-pane">
+        <div class="info-card">
+          <h3>Toplu Ürün Analizi</h3>
+          <p>Birden fazla ürünü analiz etmek için URL veya UPC listesi yükleyin.</p>
+        </div>
+
+        <div class="input-group vertical">
+          <label for="batch-type">İşlem Türü</label>
+          <select id="batch-type" class="select-input">
+            <option value="upc">UPC Listesi</option>
+            <option value="walmart">Walmart URL Listesi</option>
+            <option value="amazon">Amazon URL Listesi</option>
+          </select>
+        </div>
+
+        <div class="input-group vertical">
+          <label for="batch-input">Her satıra bir URL veya UPC girin</label>
+          <textarea id="batch-input" class="textarea-input" rows="8" placeholder="Her satıra bir URL veya UPC kodu yazın"></textarea>
+        </div>
+
+        <div class="action-area">
+          <button id="batch-process-button" class="primary-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Toplu İşlemi Başlat
+          </button>
+        </div>
+
+        <div class="progress-container" style="display: none;">
+          <div class="progress-bar">
+            <div class="progress-fill" id="batch-progress" style="width: 0%"></div>
+          </div>
+          <div class="progress-text">
+            <span id="batch-progress-text">0/0 işlendi</span>
+          </div>
+        </div>
+
+        <div class="result-area" id="batch-result-container" style="display: none;">
+          <!-- Toplu işlem sonuçları buraya dinamik olarak eklenecek -->
+        </div>
+      </div>
+
+      <!-- Geçmiş Sekmesi -->
+      <div id="history" class="tab-pane">
+        <div class="empty-state" id="history-empty-state">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 8V12L15 15M12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3Z" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p>Henüz tarama geçmişiniz yok</p>
+        </div>
+
+        <div id="history-list" class="history-list" style="display: none;">
+          <!-- Geçmiş öğeleri buraya dinamik olarak eklenecek -->
+        </div>
+      </div>
+
+      <!-- Ayarlar Sekmesi -->
+      <div id="settings" class="tab-pane">
+        <div class="settings-group">
+          <h3>API Ayarları</h3>
+          
+          <div class="setting-item">
+            <div class="setting-info">
+              <label for="api-endpoint">API Sunucu URL</label>
+              <p class="setting-description">Ürün verilerini çeken API sunucusunun adresi</p>
+            </div>
+            <input type="text" id="api-endpoint" class="text-input" placeholder="https://example.com/api">
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <label for="api-key">API Anahtarı</label>
+              <p class="setting-description">API isteklerinde kullanılacak anahtar</p>
+            </div>
+            <input type="password" id="api-key" class="text-input" placeholder="API anahtarınızı girin">
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <label>Fiyat Geçmişi İzleme</label>
+              <p class="setting-description">Taranan ürünlerin fiyat değişimlerini izle</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="track-price-history" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <label>Benzer Ürünleri Göster</label>
+              <p class="setting-description">Taranan ürünlere benzer alternatifleri görüntüle</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="show-similar-products" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-item">
+            <div class="setting-info">
+              <label>Fiyat Düşüşlerini Bildir</label>
+              <p class="setting-description">Takip edilen ürünlerin fiyatları düştüğünde bildirim al</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="notify-price-drops" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <h3>Hakkında</h3>
+          <p class="about-text">Ürün Tarayıcı v1.0.0</p>
+          <p class="about-text">Bu uzantı, Walmart ve Amazon ürünlerini tarayarak fiyat karşılaştırması yapmanızı, benzer ürünleri bulmanızı ve fiyat geçmişini takip etmenizi sağlar.</p>
+          
+          <button id="reset-settings" class="danger-button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 8H20M10 13V17M14 13V17M5 8L6 19C6 20.1046 6.89543 21 8 21H16C17.1046 21 18 20.1046 18 19L19 8M9 8V6C9 4.89543 9.89543 4 11 4H13C14.1046 4 15 4.89543 15 6V8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Ayarları Sıfırla
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html> 
