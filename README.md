@@ -1,38 +1,26 @@
-# Ürün Tarayıcı API
+# Ürün Tarayıcı API ve Chrome Eklentisi
 
-Bu API, çeşitli e-ticaret platformlarından ürün bilgilerini almak için kullanılan bir REST API hizmetidir. Chrome eklentisi için arka uç olarak çalışır.
+Bu proje, Walmart ve Amazon gibi e-ticaret platformlarından ürün verilerini çeken bir Chrome eklentisi ve arka uç API'sinden oluşur.
 
-## Özellikler
+## Proje Yapısı
 
-- Walmart ürün tarama ve varyasyon bulma
-- UPC kodu ile ürün arama
-- Amazon ürün tarama (yakında)
-- Toplu işlem desteği
-- Fiyat bildirimleri (yakında)
+Proje iki ana bileşenden oluşur:
 
-## Gereksinimler
-
-- Python 3.8+
-- Flask ve diğer bağımlılıklar (requirements.txt dosyasında belirtilmiştir)
+1. **Chrome Eklentisi** - Kullanıcı arayüzü (Manifest V3)
+2. **API Servisi** - Flask tabanlı arka uç (Python)
 
 ## Kurulum
 
-### Yerel Geliştirme
+### API Servisi
 
-1. Depoyu klonlayın
-```bash
-git clone https://github.com/kullanici-adi/urun-tarayici-api.git
-cd urun-tarayici-api
-```
+#### Yerel Geliştirme
 
-2. Sanal ortam oluşturun ve bağımlılıkları yükleyin
+1. Gerekli paketleri yükleyin:
 ```bash
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. `.env` dosyası oluşturun
+2. `.env` dosyası oluşturun:
 ```
 WALMART_CLIENT_ID=sizin_client_id
 WALMART_CLIENT_SECRET=sizin_client_secret
@@ -40,101 +28,61 @@ API_KEY=sizin_api_anahtari
 ENVIRONMENT=development
 ```
 
-4. Uygulamayı çalıştırın
+3. API'yi çalıştırın:
 ```bash
 python api_bridge.py
 ```
 
-### Render.com'da Deploy Etme
+#### Render.com'da Deploy Etme
 
-1. Render.com hesabınıza giriş yapın
-
-2. "New" butonuna tıklayın ve "Web Service" seçeneğini seçin
-
-3. GitHub reponuzu bağlayın veya reponuzun URL'sini girin
-
-4. Aşağıdaki ayarları yapılandırın:
-   - **Name**: urun-tarayici-api (veya istediğiniz bir isim)
-   - **Environment**: Python
+1. Render.com hesabınıza giriş yapın ve "New Web Service" seçin
+2. Aşağıdaki ayarları yapılandırın:
    - **Build Command**: `pip install -r requirements.txt`
    - **Start Command**: `gunicorn api_bridge:app`
+3. Environment Variables bölümünde:
+   - `WALMART_CLIENT_ID`
+   - `WALMART_CLIENT_SECRET`
+   - `API_KEY`
+   - `ENVIRONMENT=production`
 
-5. "Environment Variables" bölümünde aşağıdaki değişkenleri ekleyin:
-   - `WALMART_CLIENT_ID`: Walmart API istemci kimliği
-   - `WALMART_CLIENT_SECRET`: Walmart API istemci sırrı
-   - `API_KEY`: API erişim anahtarı
-   - `ENVIRONMENT`: production
+### Chrome Eklentisi
 
-6. "Create Web Service" butonuna tıklayarak deploy edin
+1. Chrome tarayıcınızda `chrome://extensions/` adresine gidin
+2. "Geliştirici modu"nu açın (sağ üst köşe)
+3. "Paketlenmemiş öğe yükle" düğmesine tıklayın
+4. Bu projenin kök klasörünü seçin
 
-## API Kullanımı
+## API Referansı
 
-API'ye gönderilen tüm isteklerde `X-API-Key` header'ını kullanmalısınız:
+API belgeleri için [API.md](API.md) dosyasına bakın veya [API Endpoint](#) adresini ziyaret edin.
 
-```
-X-API-Key: sizin_api_anahtari
-```
+## Özellikler
 
-### Walmart Ürün Tarama
+- Walmart ürün bilgilerini otomatik tarama
+- UPC kodu ile ürün arama
+- Ürün varyasyonlarını bulma
+- Toplu işlem desteği
+- Amazon ürün entegrasyonu (yakında)
+- Fiyat takibi ve bildirimleri (yakında)
 
-```
-POST /scan/walmart
-Content-Type: application/json
+## Ekran Görüntüleri
 
-{
-  "url": "https://www.walmart.com/ip/product-id"
-}
-```
+![Ürün Tarayıcı Arayüzü](screenshots/preview.png)
 
-veya UPC kodu ile:
+## Teknolojiler
 
-```
-POST /scan/walmart
-Content-Type: application/json
+- **Ön Uç**: HTML, CSS, JavaScript (Vanilla)
+- **Arka Uç**: Python, Flask
+- **Bulut**: Render.com
 
-{
-  "upc": "123456789012"
-}
-```
+## Katkıda Bulunma
 
-### UPC ile Arama
-
-```
-GET /search/upc/123456789012
-```
-
-### Varyasyonları Bulma
-
-```
-POST /variations/walmart
-Content-Type: application/json
-
-{
-  "url": "https://www.walmart.com/ip/product-id"
-}
-```
-
-### Toplu İşlem
-
-```
-POST /batch/process
-Content-Type: application/json
-
-{
-  "type": "walmart",
-  "items": [
-    "https://www.walmart.com/ip/product-id-1",
-    "https://www.walmart.com/ip/product-id-2"
-  ]
-}
-```
-
-## Güvenlik Notları
-
-- Üretim ortamında her zaman güçlü bir API anahtarı kullanın
-- Environment variables kullanarak hassas bilgileri güvende tutun
-- Render.com'da otomatik SSL/TLS kullanın
+1. Bu depoyu fork edin
+2. Yeni bir özellik dalı oluşturun (`git checkout -b yeni-ozellik`)
+3. Değişikliklerinizi commit edin (`git commit -am 'Yeni özellik: X'`)
+4. Dalınızı push edin (`git push origin yeni-ozellik`)
+5. Bir Pull Request oluşturun
 
 ## Lisans
 
-Bu proje MIT lisansı altında lisanslanmıştır. 
+Bu proje MIT lisansı altında lisanslanmıştır. Daha fazla bilgi için [LICENSE](LICENSE) dosyasına bakın. 
